@@ -1,28 +1,60 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Separator } from "@/components/ui/separator"
-import { Heart, Mail, Lock, User, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { useAuth } from "@/components/auth-provider"
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Heart, Mail, Lock, User, ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { useAuth } from "@/components/auth-provider";
 
 export default function AuthPage() {
-  const [isLogin, setIsLogin] = useState(true)
-  const { login, isLoading } = useAuth()
+  const [isLogin, setIsLogin] = useState(true);
+  const { login, isLoading, user } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    // If user is already authenticated, redirect to dashboard
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
 
   const handleGoogleAuth = async () => {
-    await login()
-  }
+    try {
+      const result = await signIn("google", {
+        redirect: false,
+        callbackUrl: "/dashboard",
+      });
+
+      if (result?.error) {
+        console.error("Authentication error:", result.error);
+      } else if (result?.ok) {
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-secondary/5 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Back to Home */}
-        <Link href="/" className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6">
+        <Link
+          href="/"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground mb-6"
+        >
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back to Home
         </Link>
@@ -34,9 +66,13 @@ export default function AuthPage() {
                 <Heart className="h-6 w-6 text-primary" />
               </div>
             </div>
-            <CardTitle className="text-2xl">{isLogin ? "Welcome " : "Join Health Sangini"}</CardTitle>
+            <CardTitle className="text-2xl">
+              {isLogin ? "Welcome " : "Join Health Sangini"}
+            </CardTitle>
             <CardDescription>
-              {isLogin ? "Sign in to access your health companion" : "Create your account to start your health journey"}
+              {isLogin
+                ? "Sign in to access your health companion"
+                : "Create your account to start your health journey"}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -72,7 +108,9 @@ export default function AuthPage() {
                 <Separator className="w-full" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">Or continue with email</span>
+                <span className="bg-background px-2 text-muted-foreground">
+                  Or continue with email
+                </span>
               </div>
             </div>
 
@@ -83,7 +121,11 @@ export default function AuthPage() {
                   <Label htmlFor="name">Full Name</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input id="name" placeholder="Enter your full name" className="pl-10" />
+                    <Input
+                      id="name"
+                      placeholder="Enter your full name"
+                      className="pl-10"
+                    />
                   </div>
                 </div>
               )}
@@ -92,7 +134,12 @@ export default function AuthPage() {
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="email" type="email" placeholder="Enter your email" className="pl-10" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    className="pl-10"
+                  />
                 </div>
               </div>
 
@@ -100,18 +147,30 @@ export default function AuthPage() {
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input id="password" type="password" placeholder="Enter your password" className="pl-10" />
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    className="pl-10"
+                  />
                 </div>
               </div>
 
-              <Button className="w-full">{isLogin ? "Sign In" : "Create Account"}</Button>
+              <Button className="w-full">
+                {isLogin ? "Sign In" : "Create Account"}
+              </Button>
             </div>
 
             <div className="text-center text-sm">
               <span className="text-muted-foreground">
-                {isLogin ? "Don't have an account? " : "Already have an account? "}
+                {isLogin
+                  ? "Don't have an account? "
+                  : "Already have an account? "}
               </span>
-              <button onClick={() => setIsLogin(!isLogin)} className="text-primary hover:underline font-medium">
+              <button
+                onClick={() => setIsLogin(!isLogin)}
+                className="text-primary hover:underline font-medium"
+              >
                 {isLogin ? "Sign up" : "Sign in"}
               </button>
             </div>
@@ -119,5 +178,5 @@ export default function AuthPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

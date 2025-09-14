@@ -81,8 +81,8 @@ export function Navbar() {
         <Link href="/" className="flex items-center space-x-1.5 sm:space-x-2 min-w-0 flex-shrink-0">
           <Heart className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 text-primary flex-shrink-0" />
           <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-foreground leading-tight">
-            <span className="hidden xs:inline">Health Sangini</span>
-            <span className="xs:hidden">Health</span>
+            <span className="hidden xs:inline">Sehat Sangini</span>
+            <span className="xs:hidden">Sehat Sangini</span>
           </h1>
         </Link>
 

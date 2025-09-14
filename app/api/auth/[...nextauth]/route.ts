@@ -1,30 +1,22 @@
 import NextAuth from "next-auth"
+import type { AuthOptions } from "next-auth"
 import GoogleProvider from "next-auth/providers/google"
 
-const handler = NextAuth({
+export const runtime = "nodejs"
+
+const config: AuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
+    })
   ],
   pages: {
-    signIn: '/auth',
-  },
-  callbacks: {
-    async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.sub || ''
-      }
-      return session
-    },
-    async jwt({ token, user, account }) {
-      if (account && user) {
-        token.id = user.id
-      }
-      return token
-    },
-  },
-})
+    signIn: "/auth",
+    error: "/auth",
+    newUser: "/dashboard",
+  }
+}
 
+const handler = NextAuth(config)
 export { handler as GET, handler as POST }
