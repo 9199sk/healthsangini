@@ -19,11 +19,7 @@ export function Navbar() {
       icon: Library,
       label: "Disease Library",
     },
-    {
-      href: "/sections",
-      icon: FileText,
-      label: "Sections",
-    },
+  
     {
       href: "/create-post",
       icon: Plus,
@@ -32,7 +28,7 @@ export function Navbar() {
     {
       href: "/dashboard",
       icon: User,
-      label: "User Dashboard",
+      label: "User ",
     },
   ]
 
@@ -57,11 +53,7 @@ export function Navbar() {
       icon: Calendar,
       label: "Offline Programs",
     },
-    {
-      href: "/sections",
-      icon: FileText,
-      label: "Sections",
-    },
+   
     {
       href: "/create-post",
       icon: Plus,
